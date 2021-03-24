@@ -1,6 +1,8 @@
 import requests
 import json
-from .result import GenericResult
+from .result import GenericResult, SeasonalResult
+from .platforms import Platform
+from .seasons import Seasons
 
 
 class Stats:
@@ -8,7 +10,7 @@ class Stats:
         self.key = key
 
 
-    def get_generic_stats(self, username, platform):
+    def get_generic_stats(self, username, platform: Platform):
         headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/generic',
@@ -56,4 +58,50 @@ class Stats:
             gamemode_bomb=content["stats"]["gamemode"]["bomb"],
             gamemode_secure=content["stats"]["gamemode"]["secure_area"],
             gamemode_hostage=content["stats"]["gamemode"]["hostage"]
+        )
+
+
+    def get_seasonal_stats(self, username, platform: Platform, season: Seasons):
+        headers = {"Authorization": f"Bearer {self.key}"}
+
+        request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/seasonal',
+                               headers=headers)
+        content = json.loads(request.content)
+
+        region = content["seasons"][season]["regions"]["ncsa"][0]
+
+        return SeasonalResult(
+            username=content["username"],
+            platform=content["platform"],
+            ubisoft_id=content["ubisoft_id"],
+            uplay_id=content["uplay_id"],
+            avatar_url=content["avatar_url_256"],
+            last_updated=content["last_updated"],
+            name=content["seasons"][season]["name"],
+            start_date=content["seasons"][season]["start_date"],
+            end_date=content["seasons"][season]["end_date"],
+            abandons=region["abandons"],
+            losses=region["losses"],
+            max_rank=region["max_rank"],
+            max_mmr=region["max_mmr"],
+            mmr=region["mmr"],
+            next_rank_mmr=region["next_rank_mmr"],
+            prev_rank_mmr=region["prev_rank_mmr"],
+            rank=region["rank"],
+            skill_mean=region["skill_mean"],
+            skill_standard_deviation=region["skill_standard_deviation"],
+            created_for_date=region["created_for_date"],
+            wins=region["wins"],
+            kills=region["kills"],
+            deaths=region["deaths"],
+            last_match_mmr_change=region["last_match_mmr_change"],
+            last_match_result=region["last_match_result"],
+            last_match_skill_standard_deviation_change=region[
+                                                                        "last_match_skill_standard_deviation_change"],
+            last_match_skill_mean_change=region["last_match_skill_mean_change"],
+            champions_rank_position=region["champions_rank_position"],
+            max_rank_text=region["max_rank_text"],
+            max_rank_image=region["max_rank_image"],
+            rank_image=region["rank_image"],
+            rank_text=region["rank_text"]
         )

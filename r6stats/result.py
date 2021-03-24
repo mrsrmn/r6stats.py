@@ -45,3 +45,47 @@ class GenericResult:
         self.gamemode_secure = gamemode_secure
         self.gamemode_hostage = gamemode_hostage
         self.bullets_hit = bullets_hit
+
+
+class SeasonalResult:
+    def __init__(self, username, platform, ubisoft_id, uplay_id, avatar_url, last_updated, name, start_date, end_date,
+                 max_mmr, max_rank, losses, mmr, next_rank_mmr, prev_rank_mmr, rank, skill_mean, wins, kills, deaths,
+                 skill_standard_deviation, created_for_date, last_match_mmr_change, last_match_skill_mean_change,
+                 last_match_skill_standard_deviation_change, last_match_result, champions_rank_position, rank_text,
+                 rank_image, max_rank_text, max_rank_image, abandons):
+        self.username = username
+        self.platform = platform
+        self.ubisoft_id = ubisoft_id
+        self.uplay_id = uplay_id
+        self.avatar_url = avatar_url
+        self.last_updated = last_updated
+        self.name = name
+        self.start_date = start_date
+        self.end_date = end_date
+        self.max_mmr = max_mmr
+        self.max_rank = max_rank
+        self.losses = losses
+        self.mmr = mmr
+        self.next_rank_mmr = next_rank_mmr
+        self.prev_rank_mmr = prev_rank_mmr
+        self.rank = rank
+        self.skill_mean = skill_mean
+        self.wins = wins
+        self.kills = kills
+        self.deaths = deaths
+        self.skill_standard_deviation = skill_standard_deviation
+        self.created_for_date = created_for_date
+        self.last_match_mmr_change = last_match_mmr_change
+        self.last_match_skill_mean_change = last_match_skill_mean_change
+        self.last_match_skill_standard_deviation_change = last_match_skill_standard_deviation_change
+        self.last_match_result = last_match_result
+        self.champions_rank_position = champions_rank_position
+        self.rank_text = rank_text
+        self.rank_image = rank_image
+        self.max_rank_text = max_rank_text
+        self.max_rank_image = max_rank_image
+        self.abandons = abandons
+
+
+
+
