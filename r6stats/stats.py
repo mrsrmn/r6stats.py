@@ -10,7 +10,7 @@ class Stats:
     def __init__(self, key):
         self.key = key
         self.headers = {"Authorization": f"Bearer {self.key}",
-                        "User-Agent": "r6stats.py@1.0.0"}
+                        "User-Agent": "r6stats.py/1.0.0"}
 
     def get_generic_stats(self, username, platform: Platform):
 
