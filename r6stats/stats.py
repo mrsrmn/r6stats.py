@@ -1,6 +1,6 @@
 import requests
 import json
-from .result import GenericResult, SeasonalResult, OperatorResult
+from .result import GenericResult, SeasonalResult, OperatorResult, WeaponResult, WeaponCategoryResult
 from .platforms import Platform
 from .seasons import Seasons
 
@@ -130,7 +130,7 @@ class Stats:
 
         content = json.loads(request.content)
         for op in content["operators"]:
-            if op["name"] == operator:
+            if op["name"] == operator.capitalize():
                 name = op["name"]
                 ctu = op["ctu"]
                 dbnos = op["dbnos"]
@@ -172,4 +172,103 @@ class Stats:
             losses=losses,
             melee_kills=melee_kills,
             playtime=playtime
+        )
+
+
+    def get_weapon_stats(self, username, platform: Platform, weapon: str):
+        headers = {"Authorization": f"Bearer {self.key}"}
+
+        request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/weapons',
+                               headers=headers)
+        weapon_name = None
+        category = None
+        kills = None
+        deaths = None
+        kd = None
+        headshots = None
+        headshot_percentage = None
+        times_chosen = None
+        bullets_fired = None
+        bullets_hit = None
+
+        content = json.loads(request.content)
+        for weapons in content["weapons"]:
+            if weapons["name"] == weapon:
+                weapon_name = weapons["name"]
+                category = weapons["category"]
+                kills = weapons["kills"]
+                deaths = weapons["deaths"]
+                kd = weapons["kd"]
+                headshots = weapons["headshots"]
+                headshot_percentage = weapons["headshot_percentage"]
+                times_chosen = weapons["times_chosen"]
+                bullets_fired = weapons["bullets_fired"]
+                bullets_hit = weapons["bullets_hit"]
+
+
+        return WeaponResult(
+            username=content["username"],
+            platform=content["platform"],
+            ubisoft_id=content["ubisoft_id"],
+            uplay_id=content["uplay_id"],
+            avatar_url=content["avatar_url_256"],
+            last_updated=content["last_updated"],
+            weapon_name=weapon_name,
+            category=category,
+            kills=kills,
+            deaths=deaths,
+            kd=kd,
+            headshots=headshots,
+            headshot_percentage=headshot_percentage,
+            times_chosen=times_chosen,
+            bullets_fired=bullets_fired,
+            bullets_hit=bullets_hit
+        )
+
+
+    def get_weapon_category_stats(self, username, platform: Platform, category: str):
+        headers = {"Authorization": f"Bearer {self.key}"}
+
+        request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/weapons',
+                               headers=headers)
+        category = None
+        kills = None
+        deaths = None
+        kd = None
+        headshots = None
+        headshot_percentage = None
+        times_chosen = None
+        bullets_fired = None
+        bullets_hit = None
+
+        content = json.loads(request.content)
+        for ca in content["categories"]:
+            if ca["category"] == category:
+                category = ca["category"]
+                kills = ca["kills"]
+                deaths = ca["deaths"]
+                kd = ca["kd"]
+                headshots = ca["headshots"]
+                headshot_percentage = ca["headshot_percentage"]
+                times_chosen = ca["times_chosen"]
+                bullets_fired = ca["bullets_fired"]
+                bullets_hit = ca["bullets_hit"]
+
+
+        return WeaponCategoryResult(
+            username=content["username"],
+            platform=content["platform"],
+            ubisoft_id=content["ubisoft_id"],
+            uplay_id=content["uplay_id"],
+            avatar_url=content["avatar_url_256"],
+            last_updated=content["last_updated"],
+            category=category,
+            kills=kills,
+            deaths=deaths,
+            kd=kd,
+            headshots=headshots,
+            headshot_percentage=headshot_percentage,
+            times_chosen=times_chosen,
+            bullets_fired=bullets_fired,
+            bullets_hit=bullets_hit
         )

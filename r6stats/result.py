@@ -114,3 +114,43 @@ class OperatorResult:
         self.badge_image = badge_image
         self.abilities = abilities
 
+
+class WeaponResult:
+    def __init__(self, username, platform, ubisoft_id, uplay_id, avatar_url, last_updated, weapon_name, category, kills,
+                 deaths, kd, headshots, headshot_percentage, times_chosen, bullets_fired, bullets_hit):
+        self.username = username
+        self.platform = platform
+        self.ubisoft_id = ubisoft_id
+        self.uplay_id = uplay_id
+        self.avatar_url = avatar_url
+        self.last_updated = last_updated
+        self.weapon_name = weapon_name
+        self.category = category
+        self.kills = kills
+        self.deaths = deaths
+        self.kd = kd
+        self.headshots = headshots
+        self.headshot_percentage = headshot_percentage
+        self.times_chosen = times_chosen
+        self.bullets_fired = bullets_fired
+        self.bullets_hit = bullets_hit
+
+
+class WeaponCategoryResult:
+    def __init__(self, username, platform, ubisoft_id, uplay_id, avatar_url, last_updated, category, kills,
+                 deaths, kd, headshots, headshot_percentage, times_chosen, bullets_fired, bullets_hit):
+        self.username = username
+        self.platform = platform
+        self.ubisoft_id = ubisoft_id
+        self.uplay_id = uplay_id
+        self.avatar_url = avatar_url
+        self.last_updated = last_updated
+        self.category = category
+        self.kills = kills
+        self.deaths = deaths
+        self.kd = kd
+        self.headshots = headshots
+        self.headshot_percentage = headshot_percentage
+        self.times_chosen = times_chosen
+        self.bullets_fired = bullets_fired
+        self.bullets_hit = bullets_hit
