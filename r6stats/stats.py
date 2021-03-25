@@ -6,6 +6,12 @@ from .seasons import Seasons
 from .exceptions import ApiError
 
 
+def check_for_api_error(response: dict):
+    if "status" in list(response.keys()):
+        if response["status"] == "error":
+            raise ApiError(response["error"])
+
+
 class Stats:
     def __init__(self, key):
         self.key = key
@@ -18,7 +24,7 @@ class Stats:
                                headers=self.headers)
         content = json.loads(request.content)
 
-        self.check_for_api_error(content)
+        check_for_api_error(content)
 
         return GenericResult(
             username=content["username"],
@@ -68,7 +74,7 @@ class Stats:
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/seasonal',
                                headers=self.headers)
         content = json.loads(request.content)
-        self.check_for_api_error(content)
+        check_for_api_error(content)
 
         region = content["seasons"][season]["regions"]["ncsa"][0]
 
@@ -129,7 +135,7 @@ class Stats:
         playtime = None
 
         content = json.loads(request.content)
-        self.check_for_api_error(content)
+        check_for_api_error(content)
 
         for op in content["operators"]:
             if op["name"] == operator.capitalize():
@@ -191,7 +197,7 @@ class Stats:
         bullets_hit = None
 
         content = json.loads(request.content)
-        self.check_for_api_error(content)
+        check_for_api_error(content)
 
         for weapons in content["weapons"]:
             if weapons["name"] == weapon:
@@ -229,7 +235,7 @@ class Stats:
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/weapons',
                                headers=self.headers)
-        category = None
+
         kills = None
         deaths = None
         kd = None
@@ -240,7 +246,7 @@ class Stats:
         bullets_hit = None
 
         content = json.loads(request.content)
-        self.check_for_api_error(content)
+        check_for_api_error(content)
 
         for ca in content["categories"]:
             if ca["category"] == category:
@@ -271,8 +277,3 @@ class Stats:
             bullets_fired=bullets_fired,
             bullets_hit=bullets_hit
         )
-
-    def check_for_api_error(self, response: dict):
-        if "status" in list(response.keys()):
-            if response["status"] == "error":
-                raise ApiError(response["error"])

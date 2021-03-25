@@ -5,7 +5,7 @@ with open("README.md") as f:
 
 setuptools.setup(
     name="r6stats.py",
-    version="1.0.0",
+    version="1.0.1",
     author="MakufonSkifto",
     description="A Python wrapper for the R6Stats.com API",
     long_description=readme,
