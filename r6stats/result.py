@@ -87,5 +87,30 @@ class SeasonalResult:
         self.abandons = abandons
 
 
-
+class OperatorResult:
+    def __init__(self, username, platform, ubisoft_id, uplay_id, avatar_url, last_updated, name, ctu, role, kills, kd,
+                 deaths, wins, losses, wl, headshots, dbnos, melee_kills, experience, playtime, badge_image, abilities):
+        self.username = username
+        self.platform = platform
+        self.ubisoft_id = ubisoft_id
+        self.uplay_id = uplay_id
+        self.avatar_url = avatar_url
+        self.last_updated = last_updated
+        self.name = name
+        self.ctu = ctu
+        self.role = role
+        self.kills = kills
+        self.kd = kd
+        self.deaths = deaths
+        self.wins = wins
+        self.wl = wl
+        self.headshots = headshots
+        self.wins = wins
+        self.losses = losses
+        self.dbnos = dbnos
+        self.melee_kills = melee_kills
+        self.experience = experience
+        self.playtime = playtime
+        self.badge_image = badge_image
+        self.abilities = abilities
 

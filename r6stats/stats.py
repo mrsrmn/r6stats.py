@@ -1,6 +1,6 @@
 import requests
 import json
-from .result import GenericResult, SeasonalResult
+from .result import GenericResult, SeasonalResult, OperatorResult
 from .platforms import Platform
 from .seasons import Seasons
 
@@ -96,12 +96,80 @@ class Stats:
             deaths=region["deaths"],
             last_match_mmr_change=region["last_match_mmr_change"],
             last_match_result=region["last_match_result"],
-            last_match_skill_standard_deviation_change=region[
-                                                                        "last_match_skill_standard_deviation_change"],
+            last_match_skill_standard_deviation_change=region["last_match_skill_standard_deviation_change"],
             last_match_skill_mean_change=region["last_match_skill_mean_change"],
             champions_rank_position=region["champions_rank_position"],
             max_rank_text=region["max_rank_text"],
             max_rank_image=region["max_rank_image"],
             rank_image=region["rank_image"],
             rank_text=region["rank_text"]
+        )
+
+
+    def get_operator_stats(self, username, platform: Platform, operator: str):
+        headers = {"Authorization": f"Bearer {self.key}"}
+
+        request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/operators',
+                               headers=headers)
+        name = None
+        ctu = None
+        dbnos = None
+        abilities = None
+        kd = None
+        wl = None
+        kills = None
+        badge_image = None
+        deaths = None
+        experience = None
+        role = None
+        wins = None
+        headshots = None
+        losses = None
+        melee_kills = None
+        playtime = None
+
+        content = json.loads(request.content)
+        for op in content["operators"]:
+            if op["name"] == operator:
+                name = op["name"]
+                ctu = op["ctu"]
+                dbnos = op["dbnos"]
+                abilities = op["abilities"]
+                kd = op["kd"]
+                wl = op["wl"]
+                kills = op["kills"]
+                badge_image = op["badge_image"]
+                deaths = op["deaths"]
+                experience = op["experience"]
+                role = op["role"]
+                wins = op["wins"]
+                headshots = op["headshots"]
+                losses = op["losses"]
+                melee_kills = op["melee_kills"]
+                playtime = op["playtime"]
+
+
+        return OperatorResult(
+            username=content["username"],
+            platform=content["platform"],
+            ubisoft_id=content["ubisoft_id"],
+            uplay_id=content["uplay_id"],
+            avatar_url=content["avatar_url_256"],
+            last_updated=content["last_updated"],
+            name=name,
+            ctu=ctu,
+            dbnos=dbnos,
+            abilities=abilities,
+            kd=kd,
+            wl=wl,
+            kills=kills,
+            badge_image=badge_image,
+            deaths=deaths,
+            experience=experience,
+            role=role,
+            wins=wins,
+            headshots=headshots,
+            losses=losses,
+            melee_kills=melee_kills,
+            playtime=playtime
         )
