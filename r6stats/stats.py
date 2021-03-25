@@ -3,19 +3,22 @@ import json
 from .result import GenericResult, SeasonalResult, OperatorResult, WeaponResult, WeaponCategoryResult
 from .platforms import Platform
 from .seasons import Seasons
+from .exceptions import ApiError
 
 
 class Stats:
     def __init__(self, key):
         self.key = key
-
+        self.headers = {"Authorization": f"Bearer {self.key}",
+                        "User-Agent": "r6stats.py/1.0.0"}
 
     def get_generic_stats(self, username, platform: Platform):
-        headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/generic',
-                               headers=headers)
+                               headers=self.headers)
         content = json.loads(request.content)
+
+        self.check_for_api_error(content)
 
         return GenericResult(
             username=content["username"],
@@ -60,13 +63,12 @@ class Stats:
             gamemode_hostage=content["stats"]["gamemode"]["hostage"]
         )
 
-
     def get_seasonal_stats(self, username, platform: Platform, season: Seasons):
-        headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/seasonal',
-                               headers=headers)
+                               headers=self.headers)
         content = json.loads(request.content)
+        self.check_for_api_error(content)
 
         region = content["seasons"][season]["regions"]["ncsa"][0]
 
@@ -105,12 +107,10 @@ class Stats:
             rank_text=region["rank_text"]
         )
 
-
     def get_operator_stats(self, username, platform: Platform, operator: str):
-        headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/operators',
-                               headers=headers)
+                               headers=self.headers)
         name = None
         ctu = None
         dbnos = None
@@ -129,6 +129,8 @@ class Stats:
         playtime = None
 
         content = json.loads(request.content)
+        self.check_for_api_error(content)
+
         for op in content["operators"]:
             if op["name"] == operator.capitalize():
                 name = op["name"]
@@ -147,7 +149,6 @@ class Stats:
                 losses = op["losses"]
                 melee_kills = op["melee_kills"]
                 playtime = op["playtime"]
-
 
         return OperatorResult(
             username=content["username"],
@@ -174,12 +175,10 @@ class Stats:
             playtime=playtime
         )
 
-
     def get_weapon_stats(self, username, platform: Platform, weapon: str):
-        headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/weapons',
-                               headers=headers)
+                               headers=self.headers)
         weapon_name = None
         category = None
         kills = None
@@ -192,6 +191,8 @@ class Stats:
         bullets_hit = None
 
         content = json.loads(request.content)
+        self.check_for_api_error(content)
+
         for weapons in content["weapons"]:
             if weapons["name"] == weapon:
                 weapon_name = weapons["name"]
@@ -204,7 +205,6 @@ class Stats:
                 times_chosen = weapons["times_chosen"]
                 bullets_fired = weapons["bullets_fired"]
                 bullets_hit = weapons["bullets_hit"]
-
 
         return WeaponResult(
             username=content["username"],
@@ -225,12 +225,10 @@ class Stats:
             bullets_hit=bullets_hit
         )
 
-
     def get_weapon_category_stats(self, username, platform: Platform, category: str):
-        headers = {"Authorization": f"Bearer {self.key}"}
 
         request = requests.get(f'https://api2.r6stats.com/public-api/stats/{username}/{platform}/weapons',
-                               headers=headers)
+                               headers=self.headers)
         category = None
         kills = None
         deaths = None
@@ -242,6 +240,8 @@ class Stats:
         bullets_hit = None
 
         content = json.loads(request.content)
+        self.check_for_api_error(content)
+
         for ca in content["categories"]:
             if ca["category"] == category:
                 category = ca["category"]
@@ -253,7 +253,6 @@ class Stats:
                 times_chosen = ca["times_chosen"]
                 bullets_fired = ca["bullets_fired"]
                 bullets_hit = ca["bullets_hit"]
-
 
         return WeaponCategoryResult(
             username=content["username"],
@@ -272,3 +271,8 @@ class Stats:
             bullets_fired=bullets_fired,
             bullets_hit=bullets_hit
         )
+
+    def check_for_api_error(self, response: dict):
+        if "status" in list(response.keys()):
+            if response["status"] == "error":
+                raise ApiError(response["error"])

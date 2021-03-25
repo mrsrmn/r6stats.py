@@ -1,6 +1,6 @@
-from r6stats import Stats, Platform
+from r6stats import Stats, Platform, Operators
 
 stats = Stats(key="")
-generic_stats = stats.get_operator_stats(username="BikiniBodhi", platform=Platform.pc, operator="sledge")
+operator_stats = stats.get_operator_stats(username="BikiniBodhi", platform=Platform.pc, operator=Operators.jager)
 
-print(generic_stats.ctu)
+print(operator_stats.kd)
